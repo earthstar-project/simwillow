@@ -60,7 +60,7 @@ export function makeKeypair() {
   );
 }
 
-function importPublicKey(raw: ArrayBuffer) {
+export function importPublicKey(raw: ArrayBuffer) {
   return crypto.subtle.importKey(
     "raw",
     raw,
@@ -73,6 +73,6 @@ function importPublicKey(raw: ArrayBuffer) {
   );
 }
 
-function exportKey(key: CryptoKey) {
+export function exportKey(key: CryptoKey) {
   return window.crypto.subtle.exportKey("raw", key);
 }

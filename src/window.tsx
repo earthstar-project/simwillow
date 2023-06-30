@@ -6,8 +6,6 @@ export function Window({ children }: { children: ComponentChildren }) {
   const [xPos, setXPos] = useState(0);
   const [yPos, setYPos] = useState(0);
 
-  console.log("yay");
-
   const bind = useDrag((state: { delta: [number, number] }) => {
     const [x, y] = state.delta;
 
@@ -21,7 +19,7 @@ export function Window({ children }: { children: ComponentChildren }) {
     <div
       {...bind()}
       style={{
-        position: "relative",
+        position: "absolute",
         transform: `translate(${xPos}px, ${yPos}px)`,
       }}
     >
