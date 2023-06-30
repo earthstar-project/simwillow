@@ -1,0 +1,15 @@
+{
+  "imports": {
+    "willow": "../willow-js/mod.browser.ts",
+    "preact": "https://esm.sh/preact@10.15.1?dev",
+    "preact/": "https://esm.sh/preact@10.15.1/?dev",
+    "preact/hooks": "https://esm.sh/preact@10.15.1/hooks?dev",
+    "react": "https://esm.sh/preact@10.15.1/compat?dev",
+    "react/": "https://esm.sh/preact@10.15.1/compat/?dev",
+    "react-dom": "https://esm.sh/preact@10.15.1/compat?dev",
+    "react-dom/": "https://esm.sh/preact@10.15.1/compat/?dev",
+    "preact/jsx-runtime": "https://esm.sh/preact@10.15.1/jsx-runtime?dev",
+    "preact/jsx-dev-runtime": "https://esm.sh/preact@10.15.1/jsx-dev-runtime?dev",
+    "react-use-gesture": "https://esm.sh/react-use-gesture?dev&external=react,react-dom"
+  }
+}
