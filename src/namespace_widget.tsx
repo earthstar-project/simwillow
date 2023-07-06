@@ -21,8 +21,7 @@ export function NamespaceWidget() {
   const [newNamespaceName, setNewNamespaceName] = useState("");
 
   return (
-    <div id="namespace-widget">
-      <h1>Namespaces</h1>
+    <div className="widget">
       <p>Separate universes of data which peers can sync with each other.</p>
       {manager.getNamespaces().map(([name, keypair]) => {
         return <div>{name}</div>;
@@ -32,6 +31,10 @@ export function NamespaceWidget() {
       <form
         onSubmit={async (e) => {
           e.preventDefault();
+
+          if (newNamespaceName.trim().length === 0) {
+            return;
+          }
 
           await manager.addNamespace(newNamespaceName);
 

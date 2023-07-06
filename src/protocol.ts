@@ -76,3 +76,7 @@ export function importPublicKey(raw: ArrayBuffer) {
 export function exportKey(key: CryptoKey) {
   return window.crypto.subtle.exportKey("raw", key);
 }
+
+export function exportKeyJwk(key: CryptoKey) {
+  return window.crypto.subtle.exportKey("jwk", key);
+}
