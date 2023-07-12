@@ -282,10 +282,9 @@ function Row(
               kind: "entry",
               entry: signed,
               payload: payload,
-              initialPos: {
-                x: parentWindow.position.x + 20,
-                y: parentWindow.position.y + 20,
-              },
+            }, {
+              x: parentWindow.position.x + 20,
+              y: parentWindow.position.y + 20,
             });
           }}
         >

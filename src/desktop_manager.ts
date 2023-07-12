@@ -81,7 +81,9 @@ export class DesktopManager extends EventTarget {
   }
 
   addItem(item: DesktopItem, initialPosition: { x: number; y: number }) {
-    const zIndex = this.items.size === 0 ? 0 : this.getHighestZIndex() + 1;
+    const zIndex = item.kind !== "computer"
+      ? this.items.size === 0 ? 0 : this.getHighestZIndex() + 1
+      : 0;
 
     this.items.set(item.id, [item, {
       initialPosition: initialPosition,
@@ -93,7 +95,7 @@ export class DesktopManager extends EventTarget {
   bringItemToFore(itemId: string) {
     const item = this.items.get(itemId);
 
-    if (!item) {
+    if (!item || item[0].kind === "computer") {
       return;
     }
 
