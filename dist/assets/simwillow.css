@@ -9,6 +9,10 @@ body {
 	width: 100vw;
 }
 
+.window {
+	box-shadow: 2px 2px 2px 0 rgba(0,0,0, 0.5)
+}
+
 .window-toolbar {
 	background: rgb(228, 228, 228);
 	height: 2em;
@@ -23,4 +27,52 @@ body {
 
 .computer-widget {
 	font-size: 3em;
+}
+
+.payload-row.inserted {
+	animation-duration: 2s;
+	animation-iteration-count: 1;
+	animation-name: insertionflash
+}
+
+@keyframes insertionflash {
+	from {
+		background: rgb(0, 255, 0)
+	}
+	
+	to {
+		background: white
+	}
+}
+
+.payload-row.changed {
+	animation-duration: 2s;
+	animation-iteration-count: 1;
+	animation-name: changedflash
+}
+
+@keyframes changedflash {
+	from {
+		background: rgb(255, 214, 0)
+	}
+	
+	to {
+		background: white
+	}
+}
+
+.payload-row.deleted {
+	animation-duration: 2s;
+	animation-iteration-count: 1;
+	animation-name: deletedflash
+}
+
+@keyframes deletedflash {
+	from {
+		background: rgb(255, 0, 0)
+	}
+	
+	to {
+		background: white
+	}
 }

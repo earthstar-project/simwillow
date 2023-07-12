@@ -49,7 +49,14 @@ export type DesktopItem =
   | ReplicaEntryCreatorItem
   | EntryItem;
 
+export type LayoutDetails = {
+  initialPosition: { x: number; y: number };
+  zIndex: number;
+};
+
 export class DesktopManager extends EventTarget {
+  private items = new Map<string, [DesktopItem, LayoutDetails]>();
+
   constructor({ computerManager }: { computerManager: ComputerManager }) {
     super();
 
@@ -60,6 +67,9 @@ export class DesktopManager extends EventTarget {
         kind: "computer",
         id,
         icon: "💻",
+      }, {
+        x: 10,
+        y: 10,
       });
     });
 
@@ -70,23 +80,58 @@ export class DesktopManager extends EventTarget {
     });
   }
 
-  addItem(item: DesktopItem) {
-    this.items.set(item.id, item);
+  addItem(item: DesktopItem, initialPosition: { x: number; y: number }) {
+    const zIndex = this.items.size === 0 ? 0 : this.getHighestZIndex() + 1;
+
+    this.items.set(item.id, [item, {
+      initialPosition: initialPosition,
+      zIndex,
+    }]);
     this.dispatchEvent(new CustomEvent("itemAdded"));
+  }
+
+  bringItemToFore(itemId: string) {
+    const item = this.items.get(itemId);
+
+    if (!item) {
+      return;
+    }
+
+    const newZIndex = this.getHighestZIndex() + 1;
+
+    this.items.set(itemId, [
+      item[0],
+      {
+        ...item[1],
+        zIndex: newZIndex,
+      },
+    ]);
+
+    // trigger event.
+    this.dispatchEvent(
+      new CustomEvent("itemIndexChanged", {
+        detail: {
+          id: itemId,
+          index: newZIndex,
+        },
+      }),
+    );
   }
 
   removeItem(itemId: string) {
     this.items.delete(itemId);
 
-    console.log("removed", itemId);
-
     this.dispatchEvent(new CustomEvent("itemRemoved"));
   }
 
-  private items = new Map<string, DesktopItem>();
-
   getItems() {
     return Array.from(this.items.values());
+  }
+
+  private getHighestZIndex() {
+    return Math.max(
+      ...Array.from(this.items.values()).map(([_, layout]) => layout.zIndex),
+    );
   }
 }
 

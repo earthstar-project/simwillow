@@ -5,6 +5,7 @@ import {
   DesktopManagerContext,
 } from "./desktop_manager.ts";
 import { NamespaceManagerContext } from "./namespace_manager.tsx";
+import { WindowContext } from "./window.tsx";
 
 const NO_OPTION_CHOSEN = "NEVERNOTEVERNEVERNOTEVERNEVERNOTEVERNEVERNOTEVER";
 
@@ -61,6 +62,8 @@ export function ComputerDetailsWidget(
     return !computer.has(alias);
   });
 
+  const parentWindow = useContext(WindowContext);
+
   return (
     <div className={"widget"}>
       <h2>Namespaces interested in</h2>
@@ -75,6 +78,9 @@ export function ComputerDetailsWidget(
                     id: `${computerDetails.computerId}_${namespaceAlias}`,
                     computerId: computerDetails.computerId,
                     namespaceAlias: namespaceAlias,
+                  }, {
+                    x: parentWindow.position.x + 20,
+                    y: parentWindow.position.y + 20,
                   });
                 }}
               >
@@ -128,6 +134,9 @@ export function ComputerDetailsWidget(
                 desktopManager.addItem({
                   kind: "namespace_manager",
                   id: `singleton`,
+                }, {
+                  x: parentWindow.position.x + 20,
+                  y: parentWindow.position.y + 20,
                 });
               }}
             >

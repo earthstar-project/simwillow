@@ -6,6 +6,7 @@ import { Replica } from "../../willow-js/src/replica/replica.ts";
 import { Payload, SignedEntry } from "../../willow-js/mod.universal.ts";
 import { authors } from "./authors.ts";
 import { encode as encodeBase32 } from "std_base32";
+import { WindowContext } from "./window.tsx";
 
 const encoder = new TextEncoder();
 
@@ -42,6 +43,8 @@ export function ReplicaEntryCreatorWidget(
     return <div>ooof</div>;
   }
 
+  const parentWindow = useContext(WindowContext);
+
   return (
     <div className={"widget"}>
       <form
@@ -77,10 +80,10 @@ export function ReplicaEntryCreatorWidget(
             payload: encoder.encode(payload),
           });
 
-          console.log(res);
-
           if (res.kind === "success") {
-            desktopManager.removeItem(itemId);
+            setPath("");
+            setPayload("");
+            setAuthor(NO_AUTHOR_SELECTED);
             desktopManager.addItem({
               kind: "entry",
               entry: res.signed,
@@ -89,6 +92,9 @@ export function ReplicaEntryCreatorWidget(
                 bytes: () => Promise.resolve(encoder.encode(payload)),
                 stream: new ReadableStream(),
               },
+            }, {
+              x: parentWindow.position.x + 20,
+              y: parentWindow.position.y + 20,
             });
           }
         }}

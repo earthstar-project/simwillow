@@ -9,6 +9,9 @@ import { ComputerManagerContext } from "./computer_manager.ts";
 import { ReplicaDetailsWidget } from "./replica_details_widget.tsx";
 import { ReplicaEntryCreatorWidget } from "./replica_entry_creator_widget.tsx";
 import { EntryWidget } from "./entry_widget.tsx";
+import { NamespaceManagerContext } from "./namespace_manager.tsx";
+import { encodeBase32 } from "../../willow-js/deps.ts";
+import { pubKeyAuthors } from "./authors.ts";
 
 export function Desktop() {
   const desktopManager = useContext(DesktopManagerContext);
@@ -18,21 +21,19 @@ export function Desktop() {
 
   useEffect(() => {
     const onItemChanged = () => {
-      console.log("bumped");
-
       setBump((prev) => prev + 1);
     };
 
     desktopManager.addEventListener("itemAdded", onItemChanged);
     desktopManager.addEventListener("itemRemoved", onItemChanged);
+    desktopManager.addEventListener("itemIndexChanged", onItemChanged);
 
     return () => {
       desktopManager.removeEventListener("itemAdded", onItemChanged);
       desktopManager.removeEventListener("itemRemoved", onItemChanged);
+      desktopManager.removeEventListener("itemIndexChanged", onItemChanged);
     };
   });
-
-  console.log(desktopManager.getItems());
 
   return (
     <div id="desktop">
@@ -49,18 +50,23 @@ export function Desktop() {
             desktopManager.addItem({
               kind: "namespace_manager",
               id: `singleton`,
+            }, {
+              x: 10,
+              y: 10,
             });
           }}
         >
           Namespaces
         </button>
       </nav>
-      {desktopManager.getItems().map((item) => (
+      {desktopManager.getItems().map(([item, layout]) => (
         <Window
           key={item.id}
           toolbar={shouldEnableToolbar(item)}
           itemId={item.id}
-          title={itemToolbarTitle(item)}
+          title={<ItemToolbarTitle item={item} />}
+          initialPos={layout.initialPosition}
+          zIndex={layout.zIndex}
         >
           <ItemComponent item={item} />
         </Window>
@@ -100,20 +106,35 @@ function ItemComponent({ item }: { item: DesktopItem }) {
   }
 }
 
-function itemToolbarTitle(item: DesktopItem): string | undefined {
+function ItemToolbarTitle(
+  { item }: { item: DesktopItem },
+) {
+  const namespaceManager = useContext(NamespaceManagerContext);
+
   switch (item.kind) {
     case "computer_details":
-      return `Computer`;
+      return <>Computer</>;
     case "namespace_manager":
-      return "Namespaces";
+      return <>Namespaces</>;
     case "replica_details":
-      return `Computer - Replica for ${item.namespaceAlias}`;
+      return <>Computer - Replica for {item.namespaceAlias}</>;
     case "replica_entry_creator":
-      return `Computer - Add entry to ${item.namespaceAlias}`;
-    case "entry":
-      return `Entry`;
+      return <>Computer - Add entry to {item.namespaceAlias}</>;
+    case "entry": {
+      const namespaceb32 = encodeBase32(item.entry.entry.identifier.namespace);
+      const namespaceAlias = namespaceManager.getNamespaceAliasFromBase32(
+        namespaceb32,
+      );
+      const author = pubKeyAuthors.get(
+        encodeBase32(item.entry.entry.identifier.author),
+      );
+
+      const path = new TextDecoder().decode(item.entry.entry.identifier.path);
+
+      return <>Entry - {namespaceAlias} - {path} / {author}</>;
+    }
     default:
-      return undefined;
+      return null;
   }
 }
 

@@ -4,6 +4,7 @@ import { pubKeyAuthors } from "./authors.ts";
 import { useContext, useEffect, useMemo, useState } from "preact/hooks";
 import { NamespaceManagerContext } from "./namespace_manager.tsx";
 import { ByteViz } from "./byte_viz.tsx";
+import { Timestamp } from "./timestamp.tsx";
 
 const decoder = new TextDecoder();
 
@@ -18,10 +19,6 @@ export function EntryWidget(
 
   const namespaceb32 = useMemo(() => {
     return encodeBase32(signed.entry.identifier.namespace);
-  }, [signed]);
-
-  const authorb32 = useMemo(() => {
-    return encodeBase32(signed.entry.identifier.author);
   }, [signed]);
 
   const [decodedPayload, setDecodedPayload] = useState<string | undefined>(
@@ -40,16 +37,8 @@ export function EntryWidget(
     <div className={"widget"}>
       <table>
         <tr>
-          <td>Namespace</td>
-          <td>{namespaceManager.getNamespaceAliasFromBase32(namespaceb32)}</td>
-        </tr>
-        <tr>
-          <td>Path</td>
-          <td>{decoder.decode(signed.entry.identifier.path)}</td>
-        </tr>
-        <tr>
-          <td>Author</td>
-          <td>{pubKeyAuthors.get(authorb32)}</td>
+          <td>Payload</td>
+          <td>{decodedPayload}</td>
         </tr>
 
         <tr>
@@ -66,12 +55,9 @@ export function EntryWidget(
 
         <tr>
           <td>Timestamp</td>
-          <td>{signed.entry.record.timestamp}</td>
-        </tr>
-
-        <tr>
-          <td>Payload</td>
-          <td>{decodedPayload}</td>
+          <td>
+            <Timestamp timestamp={signed.entry.record.timestamp} />
+          </td>
         </tr>
 
         <tr>

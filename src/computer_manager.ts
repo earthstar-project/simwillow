@@ -46,7 +46,7 @@ export class ComputerManager extends EventTarget {
       return;
     }
 
-    if (peer.has(keypair.publicKey)) {
+    if (peer.has(namespaceAlias)) {
       return;
     }
 
