@@ -4,7 +4,7 @@ body {
 }
 
 #desktop {
-	background: rgb(243, 255, 215);
+	background: color(display-p3 0.606 1 0.813);
 	height: 100vh;
 	width: 100vw;
 }
