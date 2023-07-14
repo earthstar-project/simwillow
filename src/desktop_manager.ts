@@ -2,6 +2,8 @@ import { createContext } from "preact";
 import { ComputerManager } from "./computer_manager.ts";
 import { NamespaceManager } from "./namespace_manager.tsx";
 import { Payload, SignedEntry } from "willow";
+import { type InfoContents } from "./info_contents.tsx";
+import * as Info from "./info_contents.tsx";
 
 export interface DesktopItemBase {
   kind: string;
@@ -41,13 +43,19 @@ export interface EntryItem extends DesktopItemBase {
   payload?: Payload;
 }
 
+export interface InfoItem extends DesktopItemBase {
+  kind: "info";
+  info: InfoContents;
+}
+
 export type DesktopItem =
   | ComputerItem
   | ComputerDetailsItem
   | NamespaceManagerItem
   | ReplicaDetailsItem
   | ReplicaEntryCreatorItem
-  | EntryItem;
+  | EntryItem
+  | InfoItem;
 
 export type LayoutDetails = {
   initialPosition: { x: number; y: number };
@@ -78,6 +86,16 @@ export class DesktopManager extends EventTarget {
 
       this.removeItem(id);
     });
+
+    this.addInfoItem(Info.Intro, { x: 100, y: 100 });
+  }
+
+  addInfoItem(info: InfoContents, initialPosition: { x: number; y: number }) {
+    this.addItem({
+      kind: "info",
+      id: info.id,
+      info,
+    }, initialPosition);
   }
 
   addItem(item: DesktopItem, initialPosition: { x: number; y: number }) {

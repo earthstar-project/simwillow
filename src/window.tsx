@@ -15,6 +15,7 @@ export function Window(
     title,
     initialPos,
     zIndex,
+    isHelp,
   }: {
     children: ComponentChildren;
     toolbar?: boolean;
@@ -22,6 +23,7 @@ export function Window(
     itemId: string;
     initialPos: { x: number; y: number };
     zIndex: number;
+    isHelp?: boolean;
   },
 ) {
   const [xPos, setXPos] = useState(initialPos.x);
@@ -71,7 +73,7 @@ export function Window(
     >
       <WindowContext.Provider value={{ position: { x: xPos, y: yPos } }}>
         <div
-          className="window-toolbar"
+          className={`window-toolbar ${isHelp ? "info" : ""}`}
           {...bind()}
           onMouseDown={() => {
             desktopManager.bringItemToFore(itemId);

@@ -22,12 +22,9 @@ export function NamespaceWidget() {
 
   return (
     <div className="widget">
-      <p>Separate universes of data which peers can sync with each other.</p>
-      {manager.getNamespaces().map(([name, keypair]) => {
+      {manager.getNamespaces().map(([name]) => {
         return <div>{name}</div>;
       })}
-      <hr />
-
       <form
         onSubmit={async (e) => {
           e.preventDefault();

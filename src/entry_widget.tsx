@@ -5,6 +5,8 @@ import { useContext, useEffect, useMemo, useState } from "preact/hooks";
 import { NamespaceManagerContext } from "./namespace_manager.tsx";
 import { ByteViz } from "./byte_viz.tsx";
 import { Timestamp } from "./timestamp.tsx";
+import * as Info from "./info_contents.tsx";
+import { InfoButton } from "./info_button.tsx";
 
 const decoder = new TextDecoder();
 
@@ -17,13 +19,18 @@ export function EntryWidget(
 
   const namespaceManager = useContext(NamespaceManagerContext);
 
-  const namespaceb32 = useMemo(() => {
-    return encodeBase32(signed.entry.identifier.namespace);
+  const namespaceAlias = useMemo(() => {
+    const b32 = encodeBase32(signed.entry.identifier.namespace);
+    return namespaceManager.getNamespaceAliasFromBase32(b32);
   }, [signed]);
 
   const [decodedPayload, setDecodedPayload] = useState<string | undefined>(
     undefined,
   );
+
+  const path = useMemo(() => {
+    return decoder.decode(signed.entry.identifier.path);
+  }, [signed]);
 
   useEffect(() => {
     if (payload) {
@@ -40,9 +47,35 @@ export function EntryWidget(
           <td>Payload</td>
           <td>{decodedPayload}</td>
         </tr>
+        <tr>
+          <td colSpan={3}>
+            Identifier <InfoButton info={Info.EntryIdentifier} />
+          </td>
+        </tr>
 
         <tr>
-          <td>Payload hash</td>
+          <td>Namespace</td>
+          <td>{namespaceAlias}</td>
+        </tr>
+
+        <tr>
+          <td>Path</td>
+          <td>{path}</td>
+        </tr>
+
+        <tr>
+          <td>Author</td>
+          <td>{author}</td>
+        </tr>
+
+        <tr>
+          <td colSpan={3}>Record</td>
+        </tr>
+
+        <tr>
+          <td>
+            Payload hash <InfoButton info={Info.EntryHash} />
+          </td>
           <td>
             <ByteViz bytes={signed.entry.record.hash} height={10} rows={1} />
           </td>
@@ -54,10 +87,16 @@ export function EntryWidget(
         </tr>
 
         <tr>
-          <td>Timestamp</td>
+          <td>
+            Timestamp <InfoButton info={Info.EntryTimestamp} />
+          </td>
           <td>
             <Timestamp timestamp={signed.entry.record.timestamp} />
           </td>
+        </tr>
+
+        <tr>
+          <td colSpan={3}>Signatures</td>
         </tr>
 
         <tr>

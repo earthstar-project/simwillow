@@ -66,7 +66,6 @@ export function ComputerDetailsWidget(
 
   return (
     <div className={"widget"}>
-      <h2>Namespaces interested in</h2>
       <ul>
         {Array.from(computer.keys()).map((namespaceAlias) => {
           return (

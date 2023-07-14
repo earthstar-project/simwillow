@@ -4,6 +4,10 @@ import { DesktopManager, DesktopManagerContext } from "./desktop_manager.ts";
 import { NamespaceManagerContext } from "./namespace_manager.tsx";
 import { NamespaceManager } from "./namespace_manager.tsx";
 import { ComputerManager, ComputerManagerContext } from "./computer_manager.ts";
+import {
+  InfoReadTracker,
+  InfoReadTrackerContext,
+} from "./info_read_tracker.ts";
 
 function SimWillow() {
   const namespaceManager = new NamespaceManager();
@@ -15,7 +19,9 @@ function SimWillow() {
         <DesktopManagerContext.Provider
           value={new DesktopManager({ computerManager })}
         >
-          <Desktop />
+          <InfoReadTrackerContext.Provider value={new InfoReadTracker()}>
+            <Desktop />
+          </InfoReadTrackerContext.Provider>
         </DesktopManagerContext.Provider>
       </ComputerManagerContext.Provider>
     </NamespaceManagerContext.Provider>

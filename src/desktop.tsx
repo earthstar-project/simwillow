@@ -12,6 +12,9 @@ import { EntryWidget } from "./entry_widget.tsx";
 import { NamespaceManagerContext } from "./namespace_manager.tsx";
 import { encodeBase32 } from "../../willow-js/deps.ts";
 import { pubKeyAuthors } from "./authors.ts";
+import { InfoWidget } from "./info_widget.tsx";
+import { InfoButton } from "./info_button.tsx";
+import * as Info from "./info_contents.tsx";
 
 export function Desktop() {
   const desktopManager = useContext(DesktopManagerContext);
@@ -67,6 +70,7 @@ export function Desktop() {
           title={<ItemToolbarTitle item={item} />}
           initialPos={layout.initialPosition}
           zIndex={layout.zIndex}
+          isHelp={item.kind === "info"}
         >
           <ItemComponent item={item} />
         </Window>
@@ -100,6 +104,8 @@ function ItemComponent({ item }: { item: DesktopItem }) {
       );
     case "entry":
       return <EntryWidget signed={item.entry} payload={item.payload} />;
+    case "info":
+      return <InfoWidget info={item.info} />;
 
     default:
       return <div>🪰</div>;
@@ -113,13 +119,31 @@ function ItemToolbarTitle(
 
   switch (item.kind) {
     case "computer_details":
-      return <>Computer</>;
+      return (
+        <>
+          Computer <InfoButton info={Info.Computers} />
+        </>
+      );
     case "namespace_manager":
-      return <>Namespaces</>;
+      return (
+        <>
+          Namespaces <InfoButton info={Info.Namespaces} />
+        </>
+      );
     case "replica_details":
-      return <>Computer - Replica for {item.namespaceAlias}</>;
+      return (
+        <>
+          Computer - Replica for {item.namespaceAlias}{" "}
+          <InfoButton info={Info.Replicas} />
+        </>
+      );
     case "replica_entry_creator":
-      return <>Computer - Add entry to {item.namespaceAlias}</>;
+      return (
+        <>
+          Computer - Add entry to {item.namespaceAlias}
+          <InfoButton info={Info.EntryCreation} />
+        </>
+      );
     case "entry": {
       const namespaceb32 = encodeBase32(item.entry.entry.identifier.namespace);
       const namespaceAlias = namespaceManager.getNamespaceAliasFromBase32(
@@ -131,8 +155,15 @@ function ItemToolbarTitle(
 
       const path = new TextDecoder().decode(item.entry.entry.identifier.path);
 
-      return <>Entry - {namespaceAlias} - {path} / {author}</>;
+      return (
+        <>
+          Entry - {namespaceAlias} - {path} / {author}{" "}
+          <InfoButton info={Info.Entries} />
+        </>
+      );
     }
+    case "info":
+      return <>{item.info.title}</>;
     default:
       return null;
   }
