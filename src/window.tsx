@@ -80,13 +80,16 @@ export function Window(
           }}
         >
           <button
+            className="close-button"
             onClick={() => {
               desktopManager.removeItem(itemId);
             }}
           >
-            x
+            <span>
+              ✕
+            </span>
           </button>
-          <span>{title}</span>
+          <div className="titlebar">{title}</div>
         </div>
         {children}
       </WindowContext.Provider>

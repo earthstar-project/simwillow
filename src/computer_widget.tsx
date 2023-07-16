@@ -21,7 +21,8 @@ export function ComputerWidget({ computer }: { computer: ComputerItem }) {
       }}
       class="computer-widget"
     >
-      {computer.icon}
+      <div>{computer.icon}</div>
+      <div className="name">{computer.id}</div>
     </div>
   );
 }

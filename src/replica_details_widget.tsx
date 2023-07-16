@@ -1,14 +1,17 @@
 import { useContext, useEffect, useMemo, useState } from "preact/hooks";
 import { ComputerManagerContext } from "./computer_manager.ts";
 import { DesktopManagerContext } from "./desktop_manager.ts";
-import { NamespaceManagerContext } from "./namespace_manager.tsx";
+
 import { Replica } from "../../willow-js/src/replica/replica.ts";
 import { Payload, SignedEntry } from "../../willow-js/mod.universal.ts";
-import { encode as encodeBase32 } from "https://deno.land/std@0.188.0/encoding/base32.ts";
+
 import { pubKeyAuthors } from "./authors.ts";
 import { compareBytes } from "../../willow-js/src/util/bytes.ts";
 import { WindowContext } from "./window.tsx";
 import { Timestamp } from "./timestamp.tsx";
+import * as Info from "./info_contents.tsx";
+import { InfoButton } from "./info_button.tsx";
+import { encodeBase32 } from "../../willow-js/deps.ts";
 
 const decoder = new TextDecoder();
 
@@ -128,10 +131,18 @@ export function ReplicaDetailsWidget(
   const parentWindow = useContext(WindowContext);
 
   return (
-    <div className={"widget"}>
-      {entries
+    <div className={"widget replica"}>
+      {entries && entries.length > 0
         ? (
-          <table>
+          <table className={"replica-entries"}>
+            <thead>
+              <tr>
+                <th>Path</th>
+                <th>Author</th>
+                <th>Timestamp</th>
+                <th></th>
+              </tr>
+            </thead>
             {mergedEntries.map(([signed, payload]) => {
               const key = `${encodeBase32(signed.entry.identifier.path)}_${
                 encodeBase32(signed.entry.identifier.author)
@@ -145,12 +156,20 @@ export function ReplicaDetailsWidget(
                   insertionFlash={shouldInsertFlash}
                   deletionFlash={deletingEntries.has(key)}
                   replica={replica}
+                  computerId={computerId}
                 />
               );
             })}
           </table>
         )
-        : <div>⏳</div>}
+        : null}
+      {entries && entries.length === 0
+        ? (
+          <ul className={"row-list"}>
+            <li className="row">This replica has no entries.</li>
+          </ul>
+        )
+        : null}
       <div>
         <button
           onClick={() => {
@@ -168,6 +187,10 @@ export function ReplicaDetailsWidget(
           Open entry creator
         </button>
       </div>
+
+      <footer className="info">
+        <InfoButton labelled info={Info.Replicas} />
+      </footer>
     </div>
   );
 }
@@ -183,12 +206,13 @@ async function getAllEntries(replica: Replica<CryptoKeyPair>) {
 }
 
 function Row(
-  { signed, payload, insertionFlash, deletionFlash, replica }: {
+  { signed, payload, insertionFlash, deletionFlash, replica, computerId }: {
     signed: SignedEntry;
     payload?: Payload;
     insertionFlash?: boolean;
     deletionFlash?: boolean;
     replica: Replica<CryptoKeyPair>;
+    computerId: string;
   },
 ) {
   const desktopManager = useContext(DesktopManagerContext);
@@ -276,19 +300,21 @@ function Row(
       </td>
       <td>
         <button
+          className={"detail"}
           onClick={() => {
             desktopManager.addItem({
               id: encodeBase32(signed.namespaceSignature),
               kind: "entry",
               entry: signed,
               payload: payload,
+              computerId,
             }, {
               x: parentWindow.position.x + 20,
               y: parentWindow.position.y + 20,
             });
           }}
         >
-          Open
+          🔍
         </button>
       </td>
     </tr>

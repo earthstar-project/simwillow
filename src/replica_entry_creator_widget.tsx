@@ -7,6 +7,8 @@ import { Payload, SignedEntry } from "../../willow-js/mod.universal.ts";
 import { authors } from "./authors.ts";
 import { encode as encodeBase32 } from "std_base32";
 import { WindowContext } from "./window.tsx";
+import * as Info from "./info_contents.tsx";
+import { InfoButton } from "./info_button.tsx";
 
 const encoder = new TextEncoder();
 
@@ -46,8 +48,9 @@ export function ReplicaEntryCreatorWidget(
   const parentWindow = useContext(WindowContext);
 
   return (
-    <div className={"widget"}>
+    <div className={"widget entry-create"}>
       <form
+        className="entry-create"
         onSubmit={async (e) => {
           e.preventDefault();
 
@@ -88,6 +91,7 @@ export function ReplicaEntryCreatorWidget(
               kind: "entry",
               entry: res.signed,
               id: encodeBase32(res.signed.namespaceSignature),
+              computerId,
               payload: {
                 bytes: () => Promise.resolve(encoder.encode(payload)),
                 stream: new ReadableStream(),
@@ -99,25 +103,65 @@ export function ReplicaEntryCreatorWidget(
           }
         }}
       >
-        <select value={author} onChange={(e) => setAuthor(e.target.value)}>
-          <option value={NO_AUTHOR_SELECTED} disabled>Select an author</option>
-          {Array.from(authors.keys()).map((author) => {
-            return <option value={author}>{author}</option>;
-          })}
-        </select>
+        <table className={"entry-detail"}>
+          <tr>
+            <td>Author</td>
+            <td>
+              <select
+                value={author}
+                onChange={(e) => setAuthor(e.target.value)}
+              >
+                <option value={NO_AUTHOR_SELECTED} disabled>
+                  Select an author
+                </option>
+                {Array.from(authors.keys()).map((author) => {
+                  return <option value={author}>{author}</option>;
+                })}
+              </select>
+            </td>
+          </tr>
 
-        <input
-          value={path}
-          placeholder="path"
-          onChange={(e) => setPath(e.target.value)}
-        />
-        <input
-          value={payload}
-          placeholder="payload"
-          onChange={(e) => setPayload(e.target.value)}
-        />
-        <button type="submit">Add new entry</button>
+          <tr>
+            <td>Path</td>
+            <td>
+              <input
+                required
+                value={path}
+                onChange={(e) => setPath(e.target.value)}
+              />
+            </td>
+          </tr>
+
+          <tr>
+            <td>Payload</td>
+            <td>
+              <input
+                required
+                value={payload}
+                onChange={(e) => setPayload(e.target.value)}
+              />
+            </td>
+          </tr>
+
+          <tr>
+            <td></td>
+            <td>
+              <button type="submit">Add new entry</button>
+            </td>
+          </tr>
+        </table>
       </form>
+      <footer className="info">
+        <div>
+          <InfoButton labelled info={Info.Entries} />
+        </div>
+        <div>
+          <InfoButton labelled info={Info.EntryCreationRequirements} />
+        </div>
+        <div>
+          <InfoButton labelled info={Info.EntryCreationTips} />
+        </div>
+      </footer>
     </div>
   );
 }

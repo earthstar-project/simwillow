@@ -1,5 +1,7 @@
 import { ComponentChildren } from "preact";
 import { InfoButton } from "./info_button.tsx";
+import { AddComputerButton } from "./add_computer_button.tsx";
+import { NamespacesButton } from "./namespaces_button.tsx";
 
 export type InfoContents = {
   id: string;
@@ -15,10 +17,9 @@ export const InfoButtonClicked: InfoContents = {
 
 export const Intro: InfoContents = {
   id: "welcome",
-  title: <>Sick SimWillow Logo</>,
+  title: <>Welcome to SimWillow!</>,
   children: (
     <>
-      <p>Welcome to SimWillow!</p>
       <p>
         The Willow General Sync Protocol is a building block for a new
         generation of applications which need:
@@ -47,8 +48,10 @@ export const Intro: InfoContents = {
       <p>
         To get started, try either of the two options here:
         <ul>
-          <button>Add computer</button>
-          <button>Namespaces</button>
+          <nav>
+            <AddComputerButton />
+            <NamespacesButton />
+          </nav>
         </ul>
       </p>
       <p>
@@ -150,9 +153,9 @@ export const Replicas: InfoContents = {
   ),
 };
 
-export const EntryCreation: InfoContents = {
-  id: "entry_creation",
-  title: "Creating new entries",
+export const EntryCreationRequirements: InfoContents = {
+  id: "entry_creation_requirements",
+  title: "What do I need to create a new entry?",
   children: (
     <>
       <p>
@@ -166,8 +169,28 @@ export const EntryCreation: InfoContents = {
         as a payload hash, payload length, and cryptographic signatures.
       </p>
       <p>
+        An entry's timestamp can be manually specified, but in SimWillow we just
+        use the time the entry was created. Similarly a payload can be any
+        arbitrary sequence of bytes, but here we just let you input text.
+      </p>
+      <p>
+        The form of credentials and signature scheme is not hard-coded into
+        Willow. In SimWillow, authors are modelled as ECDSA keypairs which are
+        used to sign entries and verify their signatures. But Willow is able to
+        support full-blown capability systems e.g. UCANs.
+      </p>
+    </>
+  ),
+};
+
+export const EntryCreationTips: InfoContents = {
+  id: "entry_creation_tips",
+  title: "Some things to try with entries.",
+  children: (
+    <>
+      <p>
         As you create new entries, they will be shown in this device's replica
-        window.Here's some things you should try:
+        window. Here's some things you should try:
       </p>
       <ul>
         <li>
@@ -183,17 +206,6 @@ export const EntryCreation: InfoContents = {
           entry, and whose author is the same?!
         </li>
       </ul>
-      <p>
-        An entry's timestamp can be manually specified, but in SimWillow we just
-        use the time the entry was created. Similarly a payload can be any
-        arbitrary sequence of bytes, but here we just let you input text.
-      </p>
-      <p>
-        Finally, the form of credentials or signature scheme is not hard-coded
-        into Willow. In SimWillow, authors are modelled as ECDSA keypairs which
-        are used to sign entries and verify their signatures. But Willow is able
-        to support full-blown capability systems e.g. UCANs.
-      </p>
     </>
   ),
 };
@@ -206,7 +218,8 @@ export const Entries: InfoContents = {
       <p>
         For every payload which is added to a namespace, a signed entry is
         created for it. This data enables Willow to sync different replicas,
-        reconcile their differences, and refuse forged data.
+        reconcile their differences, and refuse invalid, forged, or otherwise
+        unwanted data.
       </p>
     </>
   ),

@@ -15,7 +15,9 @@ export class ComputerManager extends EventTarget {
     this.namespaceManager = namespaceManager;
   }
 
-  addComputer(id: string) {
+  addComputer() {
+    const id = `Computer ${this.computers.size + 1}`;
+
     this.computers.set(id, new Map());
 
     this.dispatchEvent(new CustomEvent("computerAdded", { detail: { id } }));

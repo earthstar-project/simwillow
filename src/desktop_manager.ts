@@ -39,6 +39,7 @@ export interface ReplicaEntryCreatorItem extends DesktopItemBase {
 
 export interface EntryItem extends DesktopItemBase {
   kind: "entry";
+  computerId: string;
   entry: SignedEntry;
   payload?: Payload;
 }

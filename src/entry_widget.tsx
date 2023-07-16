@@ -7,6 +7,7 @@ import { ByteViz } from "./byte_viz.tsx";
 import { Timestamp } from "./timestamp.tsx";
 import * as Info from "./info_contents.tsx";
 import { InfoButton } from "./info_button.tsx";
+import { NamespaceLabel } from "./namespace_label.tsx";
 
 const decoder = new TextDecoder();
 
@@ -41,21 +42,30 @@ export function EntryWidget(
   }, []);
 
   return (
-    <div className={"widget"}>
-      <table>
+    <div className={"widget entry"}>
+      <table className="entry-detail">
         <tr>
           <td>Payload</td>
-          <td>{decodedPayload}</td>
-        </tr>
-        <tr>
-          <td colSpan={3}>
-            Identifier <InfoButton info={Info.EntryIdentifier} />
+          <td>
+            <div className={"payload"}>{decodedPayload}</div>
           </td>
+        </tr>
+
+        <tr className={"heading-row"}>
+          <td>
+            <h2>
+              Identifier{"\u00A0"}
+              <InfoButton info={Info.EntryIdentifier} />
+            </h2>
+          </td>
+          <td></td>
         </tr>
 
         <tr>
           <td>Namespace</td>
-          <td>{namespaceAlias}</td>
+          <td>
+            <NamespaceLabel>{namespaceAlias}</NamespaceLabel>
+          </td>
         </tr>
 
         <tr>
@@ -68,48 +78,60 @@ export function EntryWidget(
           <td>{author}</td>
         </tr>
 
-        <tr>
-          <td colSpan={3}>Record</td>
+        <tr className={"heading-row"}>
+          <td>
+            <h2>Record</h2>
+          </td>
+          <td></td>
         </tr>
 
         <tr>
           <td>
-            Payload hash <InfoButton info={Info.EntryHash} />
+            Hash{"\u00A0"}
+            <InfoButton info={Info.EntryHash} />
           </td>
           <td>
-            <ByteViz bytes={signed.entry.record.hash} height={10} rows={1} />
+            <ByteViz
+              bytes={signed.entry.record.hash}
+              height={20}
+              rows={2}
+            />
           </td>
         </tr>
 
         <tr>
-          <td>Payload length</td>
+          <td>Length</td>
           <td>{signed.entry.record.length}</td>
         </tr>
 
         <tr>
           <td>
-            Timestamp <InfoButton info={Info.EntryTimestamp} />
+            Timestamp{"\u00A0"}
+            <InfoButton info={Info.EntryTimestamp} />
           </td>
           <td>
             <Timestamp timestamp={signed.entry.record.timestamp} />
           </td>
         </tr>
 
-        <tr>
-          <td colSpan={3}>Signatures</td>
+        <tr className={"heading-row"}>
+          <td>
+            <h2>Signatures</h2>
+          </td>
+          <td></td>
         </tr>
 
         <tr>
-          <td>Namespace signature</td>
+          <td>Namespace Signature</td>
           <td>
-            <ByteViz bytes={signed.namespaceSignature} height={20} rows={2} />
+            <ByteViz bytes={signed.namespaceSignature} height={40} rows={4} />
           </td>
         </tr>
 
         <tr>
-          <td>Author signature</td>
+          <td>Author Signature</td>
           <td>
-            <ByteViz bytes={signed.authorSignature} height={20} rows={2} />
+            <ByteViz bytes={signed.authorSignature} height={40} rows={4} />
           </td>
         </tr>
       </table>

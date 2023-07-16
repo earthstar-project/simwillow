@@ -6,8 +6,9 @@ import {
 } from "./desktop_manager.ts";
 import { NamespaceManagerContext } from "./namespace_manager.tsx";
 import { WindowContext } from "./window.tsx";
-
-const NO_OPTION_CHOSEN = "NEVERNOTEVERNEVERNOTEVERNEVERNOTEVERNEVERNOTEVER";
+import * as Info from "./info_contents.tsx";
+import { InfoButton } from "./info_button.tsx";
+import { NamespaceLabel } from "./namespace_label.tsx";
 
 export function ComputerDetailsWidget(
   { computerDetails }: { computerDetails: ComputerDetailsItem },
@@ -19,10 +20,6 @@ export function ComputerDetailsWidget(
   const computer = computerManager.getComputerPeer(computerDetails.computerId);
 
   const [_, bump] = useState(true);
-
-  const [selectedNamespace, setSelectedNamespace] = useState<
-    string
-  >(NO_OPTION_CHOSEN);
 
   useEffect(() => {
     const callback = () => {
@@ -64,85 +61,92 @@ export function ComputerDetailsWidget(
 
   const parentWindow = useContext(WindowContext);
 
+  const namespaceAliases = Array.from(computer.keys());
+
   return (
-    <div className={"widget"}>
-      <ul>
-        {Array.from(computer.keys()).map((namespaceAlias) => {
-          return (
-            <li>
-              <button
-                onClick={() => {
-                  desktopManager.addItem({
-                    kind: "replica_details",
-                    id: `${computerDetails.computerId}_${namespaceAlias}`,
-                    computerId: computerDetails.computerId,
-                    namespaceAlias: namespaceAlias,
-                  }, {
-                    x: parentWindow.position.x + 20,
-                    y: parentWindow.position.y + 20,
-                  });
-                }}
-              >
-                {namespaceAlias}
-              </button>
-            </li>
-          );
-        })}
-      </ul>
+    <div className={"widget computer-details"}>
+      <fieldset>
+        <legend>Namespaces</legend>
+        <ul className={"row-list"}>
+          <li className={"row heading"}>Subscribed</li>
+          {namespaceAliases.length === 0
+            ? <li className="row">Not subscribing to any namespaces.</li>
+            : null}
+          {namespaceAliases.map((namespaceAlias) => {
+            return (
+              <li className="row">
+                <NamespaceLabel>{namespaceAlias}</NamespaceLabel>
+                <button
+                  className="detail"
+                  onClick={() => {
+                    desktopManager.addItem({
+                      kind: "replica_details",
+                      id: `${computerDetails.computerId}_${namespaceAlias}`,
+                      computerId: computerDetails.computerId,
+                      namespaceAlias: namespaceAlias,
+                    }, {
+                      x: parentWindow.position.x + 20,
+                      y: parentWindow.position.y + 20,
+                    });
+                  }}
+                >
+                  🔍
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+        <ul className="row-list">
+          <li className="row heading">Available</li>
+          {addNamespaceOptions.length > 0
+            ? (
+              <>
+                {addNamespaceOptions.map(([name]) => {
+                  return (
+                    <li className="row">
+                      <NamespaceLabel>{name}</NamespaceLabel>
+                      <button
+                        className="detail"
+                        onClick={async () => {
+                          await computerManager.addNamespaceToComputer(
+                            computerDetails.computerId,
+                            name,
+                          );
+                        }}
+                      >
+                        ➕
+                      </button>
+                    </li>
+                  );
+                })}
+              </>
+            )
+            : namespaces.length === 0
+            ? (
+              <li className="row">
+                <span>No namespaces have been created.</span>
+                <button
+                  onClick={() => {
+                    desktopManager.addItem({
+                      kind: "namespace_manager",
+                      id: `singleton`,
+                    }, {
+                      x: parentWindow.position.x + 20,
+                      y: parentWindow.position.y + 20,
+                    });
+                  }}
+                >
+                  Open Namespace Manager
+                </button>
+              </li>
+            )
+            : <li className={"row"}>All namespaces added.</li>}
+        </ul>
+      </fieldset>
 
-      {addNamespaceOptions.length > 0
-        ? (
-          <form
-            onSubmit={async (event) => {
-              event.preventDefault();
-
-              if (selectedNamespace === NO_OPTION_CHOSEN) {
-                return;
-              }
-
-              await computerManager.addNamespaceToComputer(
-                computerDetails.computerId,
-                selectedNamespace,
-              );
-
-              setSelectedNamespace(NO_OPTION_CHOSEN);
-            }}
-          >
-            <select
-              value={selectedNamespace}
-              onChange={(e) => {
-                setSelectedNamespace(e.target.value);
-              }}
-            >
-              <option disabled value={NO_OPTION_CHOSEN}>
-                Select a namespace
-              </option>
-              {addNamespaceOptions.map(([name]) => {
-                return <option key={name} value={name}>{name}</option>;
-              })}
-            </select>
-            <button type="submit">Add to this computer</button>
-          </form>
-        )
-        : (
-          <div>
-            No namespaces to add.
-
-            <button
-              onClick={() => {
-                desktopManager.addItem({
-                  kind: "namespace_manager",
-                  id: `singleton`,
-                }, {
-                  x: parentWindow.position.x + 20,
-                  y: parentWindow.position.y + 20,
-                });
-              }}
-            >
-              Open namespace manager
-            </button>
-          </div>
-        )}
+      <footer className="info">
+        <InfoButton labelled info={Info.Computers} />
+      </footer>
     </div>
   );
 }

@@ -4,7 +4,9 @@ import { InfoContents } from "./info_contents.tsx";
 import { WindowContext } from "./window.tsx";
 import { InfoReadTrackerContext } from "./info_read_tracker.ts";
 
-export function InfoButton({ info }: { info: InfoContents }) {
+export function InfoButton(
+  { info, labelled }: { info: InfoContents; labelled?: boolean },
+) {
   const desktopManager = useContext(DesktopManagerContext);
   const infoReadTracker = useContext(InfoReadTrackerContext);
 
@@ -46,9 +48,12 @@ export function InfoButton({ info }: { info: InfoContents }) {
         infoReadTracker.setReadStatus(info.id, true);
       }}
     >
-      <span>
-        ℹ
-      </span>
+      <div className="roundel">
+        <span>
+          ℹ
+        </span>
+      </div>
+      {labelled ? <span>{" "}{info.title}</span> : null}
     </button>
   );
 }

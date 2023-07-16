@@ -1,72 +1,210 @@
 body {
 	padding: 0;
 	margin: 0;
+	font-family: system-ui, sans-serif;
+}
+
+button {
+	color: rgb(65, 65, 65);
+	font-family: system-ui, sans-serif;
+	background: rgb(228, 228, 235);
+	border: 2px outset rgb(228, 228, 235);
+	padding: 0.5em;
+	font-size: 0.8em;
+	border-radius: 4px;
+	font-weight: bold;
+}
+
+button:active {
+	position: relative;
+	top: 3px;
+	left: 3px;
+	box-shadow: none;
+}
+
+input {
+	background: white;
+	border: 2px solid rgb(216, 225, 230);
+	border-radius: 4px;
+	padding: 0.5em;
+	font-size: 0.8em;
+}
+
+fieldset {
+	border: 2px solid rgb(228, 228, 235);
+	border-radius: 4px;
+	padding: 0.75em;
+}
+
+legend {
+	background-color: rgb(228, 228, 235);
+	padding: 0.5em;
+	border-radius: 4px;
+	font-size: 0.8em;
+}
+
+nav {
+	display: flex;
+	padding: 0.5em;
+	gap: 0.5em
 }
 
 #desktop {
-	background: color(display-p3 0.606 1 0.813);
+	background: color(display-p3 0.866 0.802 1);
 	height: 100vh;
 	width: 100vw;
 }
 
 .window {
-	box-shadow: 2px 2px 2px 0 rgba(0,0,0, 0.5);
-	max-width: 27em;
-}
-
-.window.info {
-	
+	box-shadow: 3px 3px 0 0 rgba(0,0,0, 0.5);
+	min-width: 23em;
+	max-width: 32em;
+	border-radius: 0.5em 0.5em 0 0;
 }
 
 .window-toolbar {
-	background: rgb(228, 228, 228);
-	height: 2em;
-	border: 2px outset gray;
+	color: rgb(245, 247, 255);
+	background: rgb(67, 80, 92);
+	height: 2.2em;
+	border: 3px outset rgb(105, 110, 116);
 	display: flex;
-	align-items: center
+	align-items: center;
+	border-radius: 0.5em 0.5em 0 0;
+	font-size: 0.9em;
+	padding: 0 1ch;
 }
 
 .window-toolbar.info {
-	background: rgb(245, 234, 225);
+	font-family: Charter, 'Bitstream Charter', 'Sitka Text', Cambria, serif;
+	color: rgb(255, 234, 206);
+	background: rgb(119, 99, 81);
+	border-color: rgb(108, 92, 58)
+}
+
+.window-toolbar > .titlebar {
+	text-align: center;
+	flex: 1 0 auto;
+	padding: 0 1.2em 0 0;
+} 
+
+.window-toolbar .close-button {
+	color: rgb(141, 57, 57);
+	font-size: 1em;
+	width: 1.2em;
+	height: 1.2em;
+	background: rgb(255, 109, 109);
+	border: 1px outset rgb(237, 132, 132);
+	margin: 0;
+	padding: 0;
+	font-style: normal;
+	border-radius: 1px;
+	box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.5);
+}
+
+.close-button:active {
+	top: 2px;
+	left: 2px;
+	box-shadow: none;
+}
+
+button.detail {
+	text-shadow: 2px 2px 1px rgba(0, 0,0,0.15);
+	cursor: zoom-in;
+	font-size: 1.2em;
+	border: none;
+	padding: 0;
+	background: none;
+}
+
+button.detail:active {
+	top: 2px;
+	left: 2px;
+	text-shadow: none;
+}
+
+.close-button span {
+	position: relative;
+	bottom: 0.15em
 }
 
 .info-button {
-	font-size: 1.2em;
-	color: white;
-	height: 1.2em;
-	width: 1.2em;
+	border: none;
+	margin: 0;
+	background: none;
+	color: rgb(0, 130, 255);
+	font-size: 0.8em;
+	gap: 0.5ch;
+	font-weight: normal;
+	display: inline-block;
+	padding: 0;
+}
+
+.info-button > div.roundel {
+	display: inline-block;
+	height: 1em;
+	width: 1em;
 	border-radius: 50%;
 	margin: 0;
 	padding: 0;
-	text-shadow: 2px 2px 0 rgba(0, 0,0, 0.5);
-	background: rgb(0, 130, 255);
-	border: none;
+	background: none;
+	border: 0.15em solid rgb(0, 130, 255);
+	box-shadow: none;
+	font-style: normal;
 }
 
-.info-button > span {
+.info-button > div.roundel > span {
 	position: relative;
-	bottom: 0.1em
+	bottom: 0.17em
 }
+
 
 .info-button.read {
-	background: rgb(166, 176, 184);
+	color: rgb(129, 159, 184);
+}
+
+.info-button.read > div.roundel {
+	border-color: rgb(129, 159, 184);
+}
+
+.info-button:active {
+	top: 0;
+	left: 0;
+}
+
+.namespace-label {
+	padding: 0.35em;
+	border-radius: 8px;
+	background-color: rgb(255, 251, 228);
+	display: inline-block;
+	border: 2px solid rgb(255, 240, 172)
 }
 
 .widget {
-	background: white;
+	background: rgb(255, 255, 255);
 	padding: 0.5em;
-	border: 2px outset gray;
+	border: 2px outset rgb(105, 110, 116);
+	border-top: 1px;
 }
 
 .widget.info {
+	font-family: Charter, 'Bitstream Charter', 'Sitka Text', Cambria, serif;
 	color: rgb(70, 30, 0);
 	max-height: 37ch;
 	overflow: auto;
-	background: rgb(255, 253, 248)
+	background: rgb(255, 253, 248);
+	border-color: rgb(114, 94, 40);
 }
 
 .computer-widget {
 	font-size: 3em;
+	gap: 0.1ch;
+	display: flex;
+	flex-direction: column;
+	align-items: center
+}
+
+.computer-widget > .name {
+	font-size: 0.2em;
 }
 
 .payload-row.inserted {
@@ -77,7 +215,7 @@ body {
 
 @keyframes insertionflash {
 	from {
-		background: rgb(0, 255, 0)
+		background: rgb(126, 255, 0)
 	}
 	
 	to {
@@ -86,7 +224,7 @@ body {
 }
 
 .payload-row.changed {
-	animation-duration: 2s;
+	animation-duration: 4s;
 	animation-iteration-count: 1;
 	animation-name: changedflash
 }
@@ -102,17 +240,143 @@ body {
 }
 
 .payload-row.deleted {
-	animation-duration: 2s;
+	animation-duration: 4s;
 	animation-iteration-count: 1;
 	animation-name: deletedflash
 }
 
 @keyframes deletedflash {
 	from {
-		background: rgb(255, 0, 0)
+		color: rgb(255, 0, 0);
+		background-color: rgb(255, 199, 199)
 	}
 	
 	to {
-		background: white
+		color: white;
+		background-color: white;
 	}
+}
+
+.row-list {
+	padding: 0;
+	margin: 0;
+}
+
+.row {
+	font-size: 0.8em;
+	padding: 0.5em 0.35em;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-bottom: 1px solid rgb(233, 233, 233)
+}
+
+.row.heading {
+	font-weight: bold;
+	border-bottom: 1px solid rgb(210, 210, 210);
+}
+
+.row:nth-child(even) {
+	background: rgb(250, 250, 250);
+	
+}
+
+.row:nth-last-child(1) {
+	border-bottom: none
+}
+
+.widget.namespace, .widget.entry-create, .widget.entry, .widget.replica, .widget.computer-details, .no-namespaces {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75ch;
+}
+
+form.namespace, form.computer-namespace {
+	display: flex;
+	gap: 0.75ch;
+align-items: center
+}
+
+fieldset.subscribed-namespaces {
+	margin-bottom: 0.5ch;
+}
+
+.computer-details .row-list {
+	margin-bottom: 0.5ch;
+}
+
+form.entry-create td:nth-child(1) {
+	text-align: right;
+}
+
+form.entry-create button {
+	justify-self: flex-end;
+}
+
+.widget.entry h2 {
+	margin: 0.25em 0;
+	font-size: 1em;
+	color: black;
+	padding-top: 1em;
+}
+
+table.entry-detail {
+	border-collapse: collapse;
+}
+
+table.entry-detail tr td {
+	font-size: 0.8em;
+	padding: 0.25em;
+}
+
+table.entry-detail tr td:nth-child(1) {
+
+	color: rgb(116, 116, 116);
+	text-align: right;
+	border-right: 1px solid rgb(236, 236, 236);
+}
+
+table.entry-detail tr td:nth-child(2) {
+	padding-left: 1ch;
+}
+
+table.entry-detail tr.heading-row td {
+	border-bottom: 1px solid rgb(236, 236, 236);
+}
+
+table.entry-detail tr:nth-last-child(1) td {
+	border-bottom: none;
+}
+
+table.replica-entries {
+	font-size: 0.8em;
+	border-collapse: collapse;
+}
+
+table.replica-entries thead th {
+	text-align: left;
+	border-bottom: 1px solid rgb(236, 236, 236);
+	border-right: 1px solid rgb(236, 236, 236);
+	padding: 0.25em;
+}
+
+table.replica-entries thead th:nth-last-child(-n + 2) {
+	border-right: none;
+}
+
+table.replica-entries tr td {
+	padding: 0.25em;
+	border-right: 1px solid rgb(236, 236, 236);
+	border-bottom: 1px solid rgb(236, 236, 236);
+}
+
+table.replica-entries tr td:nth-last-child(-n + 2) {
+	border-right: none;
+}
+
+footer.info {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 0.75ch;
 }

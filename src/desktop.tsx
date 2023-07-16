@@ -5,7 +5,7 @@ import { DesktopItem, DesktopManagerContext } from "./desktop_manager.ts";
 import { NamespaceWidget } from "./namespace_widget.tsx";
 import { ComputerWidget } from "./computer_widget.tsx";
 import { ComputerDetailsWidget } from "./computer_details_widget.tsx";
-import { ComputerManagerContext } from "./computer_manager.ts";
+
 import { ReplicaDetailsWidget } from "./replica_details_widget.tsx";
 import { ReplicaEntryCreatorWidget } from "./replica_entry_creator_widget.tsx";
 import { EntryWidget } from "./entry_widget.tsx";
@@ -13,12 +13,13 @@ import { NamespaceManagerContext } from "./namespace_manager.tsx";
 import { encodeBase32 } from "../../willow-js/deps.ts";
 import { pubKeyAuthors } from "./authors.ts";
 import { InfoWidget } from "./info_widget.tsx";
-import { InfoButton } from "./info_button.tsx";
-import * as Info from "./info_contents.tsx";
+
+import { NamespacesButton } from "./namespaces_button.tsx";
+import { AddComputerButton } from "./add_computer_button.tsx";
 
 export function Desktop() {
   const desktopManager = useContext(DesktopManagerContext);
-  const computerManager = useContext(ComputerManagerContext);
+
   // Use an incrementing number here because events fired concurrently would cause a boolean to sometimes end up in the same place.
   const [_bump, setBump] = useState(0);
 
@@ -41,26 +42,8 @@ export function Desktop() {
   return (
     <div id="desktop">
       <nav>
-        <button
-          onClick={() => {
-            computerManager.addComputer(`${Date.now()}`);
-          }}
-        >
-          Add computer
-        </button>
-        <button
-          onClick={() => {
-            desktopManager.addItem({
-              kind: "namespace_manager",
-              id: `singleton`,
-            }, {
-              x: 10,
-              y: 10,
-            });
-          }}
-        >
-          Namespaces
-        </button>
+        <AddComputerButton />
+        <NamespacesButton />
       </nav>
       {desktopManager.getItems().map(([item, layout]) => (
         <Window
@@ -121,27 +104,26 @@ function ItemToolbarTitle(
     case "computer_details":
       return (
         <>
-          Computer <InfoButton info={Info.Computers} />
+          {item.computerId}
         </>
       );
     case "namespace_manager":
       return (
         <>
-          Namespaces <InfoButton info={Info.Namespaces} />
+          Namespaces
         </>
       );
     case "replica_details":
       return (
         <>
-          Computer - Replica for {item.namespaceAlias}{" "}
-          <InfoButton info={Info.Replicas} />
+          {item.computerId} - Replica for {item.namespaceAlias}
+          {" "}
         </>
       );
     case "replica_entry_creator":
       return (
         <>
-          Computer - Add entry to {item.namespaceAlias}
-          <InfoButton info={Info.EntryCreation} />
+          {item.computerId} - Add entry to {item.namespaceAlias}
         </>
       );
     case "entry": {
@@ -157,8 +139,8 @@ function ItemToolbarTitle(
 
       return (
         <>
-          Entry - {namespaceAlias} - {path} / {author}{" "}
-          <InfoButton info={Info.Entries} />
+          {item.computerId} - {namespaceAlias} - {path} - {author}
+          {" "}
         </>
       );
     }

@@ -1,11 +1,11 @@
 import { exportKeyJwk, makeKeypair } from "../src/protocol.ts";
 
 const authors = [
-  "alfie",
-  "betty",
-  "gemma",
-  "dalton",
-  "epson",
+  "Alfie",
+  "Betty",
+  "Gemma",
+  "Dalton",
+  "Epson",
 ];
 
 const keypairs: Record<
